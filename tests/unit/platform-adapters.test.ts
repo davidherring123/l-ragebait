@@ -37,4 +37,21 @@ describe('platform adapters', () => {
     element.innerHTML = '<a id="video-title">Hi</a>';
     expect(youtubeAdapter.extract(element)).toBeUndefined();
   });
+
+  it('extracts titles from newer YouTube view-model markup', () => {
+    document.body.innerHTML = `
+      <yt-lockup-view-model>
+        <div id="meta">
+          <div role="link">Kyedae's Return Is Already Causing Drama</div>
+          <span>Example Channel</span>
+        </div>
+      </yt-lockup-view-model>`;
+    const element = document.querySelector<HTMLElement>('yt-lockup-view-model');
+
+    expect(element).not.toBeNull();
+    expect(element === null ? undefined : youtubeAdapter.extract(element)?.text).toContain(
+      "Kyedae's Return Is Already Causing Drama",
+    );
+    expect(element === null ? undefined : youtubeAdapter.getDebugAnchor(element)?.getAttribute('role')).toBe('link');
+  });
 });

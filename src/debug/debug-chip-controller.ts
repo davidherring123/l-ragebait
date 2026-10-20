@@ -81,7 +81,11 @@ export class DebugChipController implements DebugPresenter {
     const chip = this.#chipsByElement.get(element) ?? document.createElement('span');
     chip.className = 'l-ragebait-debug-chip';
     chip.style.display = 'inline-flex';
+    chip.style.setProperty('width', 'max-content', 'important');
+    chip.style.setProperty('max-width', '100%', 'important');
+    chip.style.setProperty('flex', '0 0 auto', 'important');
     chip.style.alignItems = 'center';
+    chip.style.alignSelf = 'center';
     chip.style.marginInlineStart = '6px';
     chip.style.padding = '1px 5px';
     chip.style.border = '1px solid currentColor';
