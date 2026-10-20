@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>L Ragebait</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>L Ragebait</h1>
+        <p>Quiet the outrage. Keep the context.</p>
+      </div>
+      <label class="switch"><input id="enabled" type="checkbox" /><span>Enabled</span></label>
+    </header>
+
+    <main>
+      <section>
+        <h2>Platforms</h2>
+        <label><input id="platform-x" type="checkbox" /> X</label>
+        <label><input id="platform-youtube" type="checkbox" /> YouTube</label>
+      </section>
+
+      <section>
+        <h2>Categories</h2>
+        <label><input id="category-ragebait" type="checkbox" /> Ragebait</label>
+        <label><input id="category-inflammatory" type="checkbox" /> Inflammatory discussions</label>
+        <label><input id="category-sensationalized" type="checkbox" /> Sensationalized tragedies</label>
+      </section>
+
+      <section>
+        <div class="row"><h2>Sensitivity</h2><output id="threshold-output">85%</output></div>
+        <input id="threshold" type="range" min="70" max="95" step="1" value="85" />
+        <label><input id="animations" type="checkbox" /> Removal animations</label>
+      </section>
+
+      <section class="stats">
+        <div><strong id="session-count">0</strong><span>This session</span></div>
+        <div><strong id="lifetime-count">0</strong><span>Lifetime</span></div>
+      </section>
+
+      <section>
+        <h2>TypeSafe AI</h2>
+        <p id="api-status" class="status">No API key saved</p>
+        <div class="key-row">
+          <input id="api-key" type="password" autocomplete="off" placeholder="Paste a Jev API key" />
+          <button id="save-api-key" type="button">Save</button>
+        </div>
+        <small>Saved locally and only read by the extension worker.</small>
+      </section>
+
+      <section>
+        <div class="row"><h2>Recently hidden</h2><button id="refresh-hidden" class="text-button" type="button">Refresh</button></div>
+        <p id="hidden-empty" class="muted">Nothing hidden in this tab.</p>
+        <ul id="hidden-items"></ul>
+      </section>
+    </main>
+    <p id="error" role="alert"></p>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

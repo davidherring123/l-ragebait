@@ -1,0 +1,44 @@
+{
+  "name": "l-ragebait",
+  "version": "0.1.0",
+  "description": "A conservative ragebait filter for X and YouTube.",
+  "type": "module",
+  "private": false,
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "typecheck": "wxt prepare && tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "deps": "depcruise src entrypoints --config dependency-cruiser.cjs",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "check": "npm run typecheck && npm run lint && npm run deps && npm test && npm run build",
+    "postinstall": "wxt prepare"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.8.1",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5",
+    "@vitest/coverage-v8": "^5.0.5",
+    "dependency-cruiser": "^18.7.0",
+    "eslint": "^10.13.0",
+    "jsdom": "^29.1.1",
+    "rollup": "^4.64.12",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5",
+    "wxt": "^0.21.4"
+  }
+}

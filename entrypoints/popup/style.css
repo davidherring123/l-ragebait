@@ -1,0 +1,37 @@
+:root {
+  color: #20221f;
+  background: #f7f6f1;
+  font: 13px/1.4 system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { width: 360px; margin: 0; }
+header { display: flex; align-items: center; justify-content: space-between; padding: 16px; color: #fff; background: #20221f; }
+h1 { margin: 0; font-size: 19px; }
+header p { margin: 2px 0 0; color: #c9ccc3; font-size: 11px; }
+main { padding: 0 16px 12px; }
+section { padding: 13px 0; border-bottom: 1px solid #deddd7; }
+h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+label { display: flex; gap: 8px; align-items: center; margin: 7px 0; }
+input[type='checkbox'] { accent-color: #657850; }
+input[type='range'] { width: 100%; accent-color: #657850; }
+.row { display: flex; align-items: center; justify-content: space-between; }
+.row h2 { margin: 0; }
+.switch { margin: 0; font-weight: 700; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; text-align: center; }
+.stats div + div { border-left: 1px solid #deddd7; }
+.stats strong { display: block; font-size: 24px; color: #536441; }
+.stats span { color: #696b66; font-size: 11px; }
+.key-row { display: flex; gap: 6px; }
+.key-row input { min-width: 0; flex: 1; }
+input[type='password'], button { border: 1px solid #bfc1b9; border-radius: 5px; padding: 7px 9px; background: #fff; }
+button { cursor: pointer; font-weight: 600; }
+button:hover { border-color: #657850; }
+.text-button { padding: 0; border: 0; color: #536441; background: transparent; }
+.status, .muted, small { color: #696b66; }
+.status { margin: 0 0 7px; }
+small { display: block; margin-top: 5px; }
+ul { margin: 8px 0 0; padding: 0; list-style: none; }
+li { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 0; border-top: 1px solid #e5e4df; }
+li p { margin: 0; overflow-wrap: anywhere; }
+#error { min-height: 18px; margin: 0; padding: 0 16px 10px; color: #9d2b20; }
