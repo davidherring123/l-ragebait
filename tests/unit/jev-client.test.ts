@@ -17,21 +17,33 @@ describe('JevClient', () => {
           ragebait: { type: 'noul', noul: 0.91 },
           inflammatory: { type: 'noul', noul: 0.31 },
           sensationalized: { type: 'noul', noul: 0.12 },
+          custom: { type: 'noul', noul: 0.88 },
         },
       }));
     };
     const client = new JevClient(fetchImplementation);
 
-    await expect(client.classify('Example content long enough to classify.', 'secret')).resolves.toEqual({
+    await expect(client.classify(
+      'Example content long enough to classify.',
+      'secret',
+      'This content starts hostile arguments about games.',
+    )).resolves.toEqual({
       ragebait: 0.91,
       inflammatory: 0.31,
       sensationalized: 0.12,
+      custom: 0.88,
     });
     expect(requestBody).toMatchObject({
       questions: {
         ragebait: { type: 'noul' },
         inflammatory: { type: 'noul' },
         sensationalized: { type: 'noul' },
+        custom: {
+          type: 'noul',
+          instructions: {
+            user_defined_condition: 'This content starts hostile arguments about games.',
+          },
+        },
       },
     });
   });
@@ -43,7 +55,7 @@ describe('JevClient', () => {
     };
     const client = new JevClient(fetchImplementation);
 
-    await expect(client.classify('Example content long enough to classify.', 'secret')).rejects.toThrow();
+    await expect(client.classify('Example content long enough to classify.', 'secret', undefined)).rejects.toThrow();
   });
 
   it('rejects unsuccessful API responses', async () => {
@@ -53,6 +65,6 @@ describe('JevClient', () => {
     };
     const client = new JevClient(fetchImplementation);
 
-    await expect(client.classify('Example content long enough to classify.', 'secret')).rejects.toThrow('503');
+    await expect(client.classify('Example content long enough to classify.', 'secret', undefined)).rejects.toThrow('503');
   });
 });

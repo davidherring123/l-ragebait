@@ -7,6 +7,7 @@ const scores: ClassificationScores = {
   ragebait: 0.9,
   inflammatory: 0.2,
   sensationalized: 0.1,
+  custom: null,
 };
 
 describe('ClassificationService', () => {
@@ -27,8 +28,8 @@ describe('ClassificationService', () => {
     };
     const service = new ClassificationService({ classify }, cache, 'policy-1');
 
-    const first = service.classify('same-hash', 'same text', 'key');
-    const second = service.classify('same-hash', 'same text', 'key');
+    const first = service.classify('same-hash', 'same text', 'key', undefined, 'core');
+    const second = service.classify('same-hash', 'same text', 'key', undefined, 'core');
     await vi.waitFor(() => {
       expect(classify).toHaveBeenCalledOnce();
     });
@@ -55,7 +56,7 @@ describe('ClassificationService', () => {
     };
     const service = new ClassificationService({ classify }, cache, 'policy-1');
 
-    await expect(service.classify('hash', 'text', 'key')).resolves.toEqual(scores);
+    await expect(service.classify('hash', 'text', 'key', undefined, 'core')).resolves.toEqual(scores);
     expect(classify).not.toHaveBeenCalled();
   });
 });

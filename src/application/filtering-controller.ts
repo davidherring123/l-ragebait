@@ -159,6 +159,9 @@ export class FilteringController {
         result.data.scores,
         this.#settings.threshold,
         result.data.matchedCategories,
+        this.#settings.customRule.enabled
+          ? this.#settings.customRule.instruction.trim() || undefined
+          : undefined,
       );
       return;
     }

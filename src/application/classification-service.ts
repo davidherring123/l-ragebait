@@ -17,8 +17,14 @@ export class ClassificationService {
     this.#policyVersion = policyVersion;
   }
 
-  public async classify(hash: string, text: string, apiKey: string): Promise<ClassificationScores> {
-    const key = `${this.#policyVersion}:${hash}`;
+  public async classify(
+    hash: string,
+    text: string,
+    apiKey: string,
+    customRule: string | undefined,
+    customRuleFingerprint: string,
+  ): Promise<ClassificationScores> {
+    const key = `${this.#policyVersion}:${customRuleFingerprint}:${hash}`;
     const cached = await this.#cache.get(key);
     if (cached !== undefined) {
       return cached;
@@ -29,7 +35,7 @@ export class ClassificationService {
       return existing;
     }
 
-    const request = this.#provider.classify(text, apiKey).then(async (scores) => {
+    const request = this.#provider.classify(text, apiKey, customRule).then(async (scores) => {
       await this.#cache.set(key, scores);
       return scores;
     });

@@ -22,6 +22,7 @@ test('classifies a YouTube recommendation and shows debug scores', async ({ cont
           ragebait: { type: 'noul', noul: 0.99 },
           inflammatory: { type: 'noul', noul: 0.2 },
           sensationalized: { type: 'noul', noul: 0.1 },
+          custom: { type: 'noul', noul: 0.96 },
         },
       }),
     });
@@ -46,8 +47,12 @@ test('classifies a YouTube recommendation and shows debug scores', async ({ cont
   await popup.getByRole('button', { name: 'Save' }).click();
   await expect(popup.getByText('API key saved')).toBeVisible();
   await popup.getByLabel('Show classification scores').check();
+  await popup.getByLabel('Enable custom rule').check();
+  await popup.getByLabel('Hide content when…').fill('This content tries to provoke arguments about gaming.');
+  await popup.getByLabel('Hide content when…').blur();
   await popup.reload();
   await expect(popup.getByLabel('Show classification scores')).toBeChecked();
+  await expect(popup.getByLabel('Enable custom rule')).toBeChecked();
 
   await page.goto('https://www.youtube.com/');
   const recommendation = page.locator('ytd-rich-item-renderer');
@@ -74,6 +79,7 @@ test('classifies a YouTube recommendation and shows debug scores', async ({ cont
   expect(jevRequestCount).toBe(1);
   await expect(recommendation).toHaveCSS('display', 'block');
   const chip = recommendation.locator('.l-ragebait-debug-chip');
-  await expect(chip).toHaveText('R 99% · I 20% · S 10%');
+  await expect(chip).toHaveText('R 99% · I 20% · S 10% · C 96%');
   await expect(chip).toHaveAttribute('title', /Active hide threshold: 85%/u);
+  await expect(chip).toHaveAttribute('title', /This content tries to provoke arguments about gaming\./u);
 });

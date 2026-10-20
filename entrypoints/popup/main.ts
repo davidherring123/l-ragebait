@@ -14,6 +14,14 @@ function input(id: string): HTMLInputElement {
   return element;
 }
 
+function textarea(id: string): HTMLTextAreaElement {
+  const element = document.getElementById(id);
+  if (!(element instanceof HTMLTextAreaElement)) {
+    throw new Error(`Missing textarea ${id}.`);
+  }
+  return element;
+}
+
 function textElement(id: string): HTMLElement {
   const element = document.getElementById(id);
   if (element === null) {
@@ -32,6 +40,8 @@ const controls = {
   threshold: input('threshold'),
   animations: input('animations'),
   debugMode: input('debug-mode'),
+  customRuleEnabled: input('custom-rule-enabled'),
+  customRule: textarea('custom-rule'),
   apiKey: input('api-key'),
 };
 
@@ -53,6 +63,10 @@ function readSettings(): Settings {
     threshold: 0.95 - sensitivity * 0.25,
     animations: controls.animations.checked,
     debugMode: controls.debugMode.checked,
+    customRule: {
+      enabled: controls.customRuleEnabled.checked,
+      instruction: controls.customRule.value.trim(),
+    },
   };
 }
 
@@ -66,6 +80,8 @@ function displaySettings(settings: Settings): void {
   controls.threshold.value = String(Math.round(((0.95 - settings.threshold) / 0.25) * 100));
   controls.animations.checked = settings.animations;
   controls.debugMode.checked = settings.debugMode;
+  controls.customRuleEnabled.checked = settings.customRule.enabled;
+  controls.customRule.value = settings.customRule.instruction;
   textElement('threshold-output').textContent = `${controls.threshold.value}%`;
 }
 

@@ -1,4 +1,4 @@
-import type { Category } from '../domain/classification';
+import type { MatchCategory } from '../domain/classification';
 import { HiddenItemRegistry } from './hidden-item-registry';
 
 const ANIMATION_DURATION_MS = 300;
@@ -24,7 +24,7 @@ export class AnimationController {
   public async hide(
     element: HTMLElement,
     text: string,
-    categories: readonly Category[],
+    categories: readonly MatchCategory[],
     animationsEnabled: boolean,
   ): Promise<string> {
     const originalStyle = element.getAttribute('style');

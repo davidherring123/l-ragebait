@@ -25,7 +25,9 @@ input[type='range'] { width: 100%; accent-color: #657850; }
 .stats span { color: #696b66; font-size: 11px; }
 .key-row { display: flex; gap: 6px; }
 .key-row input { min-width: 0; flex: 1; }
-input[type='password'], button { border: 1px solid #bfc1b9; border-radius: 5px; padding: 7px 9px; background: #fff; }
+input[type='password'], textarea, button { border: 1px solid #bfc1b9; border-radius: 5px; padding: 7px 9px; background: #fff; }
+textarea { width: 100%; resize: vertical; font: inherit; }
+.field-label { margin-bottom: 4px; color: #51534e; font-size: 11px; }
 button { cursor: pointer; font-weight: 600; }
 button:hover { border-color: #657850; }
 .text-button { padding: 0; border: 0; color: #536441; background: transparent; }

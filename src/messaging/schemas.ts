@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { CategorySchema, ClassificationScoresSchema } from '../domain/classification';
+import { ClassificationScoresSchema, MatchCategorySchema } from '../domain/classification';
 import { PlatformSchema } from '../domain/platform';
 import { SettingsSchema } from '../domain/settings';
 import { StatisticsSchema } from '../domain/statistics';
@@ -20,7 +20,7 @@ export const ClassificationResponseSchema = z.discriminatedUnion('ok', [
   z.object({
     ok: z.literal(true),
     scores: ClassificationScoresSchema,
-    matchedCategories: z.array(CategorySchema),
+    matchedCategories: z.array(MatchCategorySchema),
     shouldHide: z.boolean(),
   }),
   z.object({ ok: z.literal(false) }),
@@ -42,7 +42,7 @@ export const ContentRequestSchema = z.discriminatedUnion('type', [
 export const RecentHiddenItemSchema = z.object({
   id: z.string().min(1),
   excerpt: z.string(),
-  categories: z.array(CategorySchema),
+  categories: z.array(MatchCategorySchema),
 });
 
 export const RecentHiddenItemsSchema = z.array(RecentHiddenItemSchema);

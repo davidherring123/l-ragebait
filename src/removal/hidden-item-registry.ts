@@ -1,4 +1,4 @@
-import type { Category } from '../domain/classification';
+import type { MatchCategory } from '../domain/classification';
 import type { RecentHiddenItem } from '../messaging/schemas';
 
 type HiddenRecord = Readonly<{
@@ -16,7 +16,7 @@ export class HiddenItemRegistry {
     element: HTMLElement,
     originalStyle: string | null,
     text: string,
-    categories: readonly Category[],
+    categories: readonly MatchCategory[],
   ): string {
     const id = crypto.randomUUID();
     const excerpt = text.replaceAll(/\s+/gu, ' ').trim().slice(0, 120);

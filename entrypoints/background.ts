@@ -1,4 +1,5 @@
 import { ClassificationService } from '../src/application/classification-service';
+import { hashContent } from '../src/classifier/content-hash';
 import { decideClassification } from '../src/domain/classification';
 import type { Settings } from '../src/domain/settings';
 import { JevClient, CLASSIFIER_POLICY_VERSION } from '../src/classifier/jev-client';
@@ -48,8 +49,24 @@ async function classify(request: Extract<BackgroundRequest, { type: 'classify' }
   }
 
   try {
-    const scores = await classificationService.classify(request.hash, request.text, apiKey);
-    const decision = decideClassification(scores, settings.categories, settings.threshold);
+    const instruction = settings.customRule.instruction.trim();
+    const customRule = settings.customRule.enabled && instruction.length > 0
+      ? instruction
+      : undefined;
+    const customRuleFingerprint = customRule === undefined ? 'core' : await hashContent(customRule);
+    const scores = await classificationService.classify(
+      request.hash,
+      request.text,
+      apiKey,
+      customRule,
+      customRuleFingerprint,
+    );
+    const decision = decideClassification(
+      scores,
+      settings.categories,
+      settings.threshold,
+      customRule !== undefined,
+    );
     return { ok: true, scores, ...decision };
   } catch (error: unknown) {
     console.warn('L Ragebait kept content visible because classification failed.', error);

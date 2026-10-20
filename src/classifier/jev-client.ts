@@ -16,11 +16,12 @@ const jevResponseSchema = z.object({
     ragebait: jevNoulSchema,
     inflammatory: jevNoulSchema,
     sensationalized: jevNoulSchema,
+    custom: jevNoulSchema.optional(),
   }),
 });
 
 const MODEL = 'jev-1.13.0';
-export const CLASSIFIER_POLICY_VERSION = 'jev-1.13.0-policy-1';
+export const CLASSIFIER_POLICY_VERSION = 'jev-1.13.0-policy-2';
 
 export class JevClient {
   readonly #fetch: typeof fetch;
@@ -37,7 +38,52 @@ export class JevClient {
         };
   }
 
-  public async classify(text: string, apiKey: string): Promise<ClassificationScores> {
+  public async classify(
+    text: string,
+    apiKey: string,
+    customRule: string | undefined,
+  ): Promise<ClassificationScores> {
+    const coreQuestions = {
+      ragebait: {
+        type: 'noul',
+        instructions:
+          'Is this content deliberately manufactured to provoke anger or outrage primarily to farm engagement?',
+        criteria: {
+          true: 'Uses deliberate provocation, manipulative framing, or outrage farming as its primary presentation.',
+          false: 'Neutral reporting, sincere humor, legitimate criticism, or ordinary disagreement even when the topic is negative.',
+        },
+      },
+      inflammatory: {
+        type: 'noul',
+        instructions:
+          'Is this a hostile, antagonistic discussion such as a political fight, gender war, or attack-driven social commentary?',
+        criteria: {
+          true: 'The presentation promotes hostility, contempt, dehumanization, or combative group conflict.',
+          false: 'Civil disagreement, factual analysis, neutral news, or criticism focused on conduct and evidence.',
+        },
+      },
+      sensationalized: {
+        type: 'noul',
+        instructions:
+          'Does this exploit a crime, tragedy, death, or disturbing event through sensationalized commentary?',
+        criteria: {
+          true: 'The presentation exploits disturbing events for shock, spectacle, outrage, or engagement.',
+          false: 'Straightforward reporting, safety information, respectful remembrance, or measured analysis.',
+        },
+      },
+    } as const;
+    const questions = customRule === undefined
+      ? coreQuestions
+      : {
+          ...coreQuestions,
+          custom: {
+            type: 'noul',
+            instructions: {
+              user_defined_condition: customRule,
+              question: 'Does the content clearly satisfy `user_defined_condition`?',
+            },
+          },
+        } as const;
     const response = await this.#fetch('https://api.typesafe.ai/v1/systemone', {
       method: 'POST',
       headers: {
@@ -47,35 +93,7 @@ export class JevClient {
       body: JSON.stringify({
         model: MODEL,
         state: text,
-        questions: {
-          ragebait: {
-            type: 'noul',
-            instructions:
-              'Is this content deliberately manufactured to provoke anger or outrage primarily to farm engagement?',
-            criteria: {
-              true: 'Uses deliberate provocation, manipulative framing, or outrage farming as its primary presentation.',
-              false: 'Neutral reporting, sincere humor, legitimate criticism, or ordinary disagreement even when the topic is negative.',
-            },
-          },
-          inflammatory: {
-            type: 'noul',
-            instructions:
-              'Is this a hostile, antagonistic discussion such as a political fight, gender war, or attack-driven social commentary?',
-            criteria: {
-              true: 'The presentation promotes hostility, contempt, dehumanization, or combative group conflict.',
-              false: 'Civil disagreement, factual analysis, neutral news, or criticism focused on conduct and evidence.',
-            },
-          },
-          sensationalized: {
-            type: 'noul',
-            instructions:
-              'Does this exploit a crime, tragedy, death, or disturbing event through sensationalized commentary?',
-            criteria: {
-              true: 'The presentation exploits disturbing events for shock, spectacle, outrage, or engagement.',
-              false: 'Straightforward reporting, safety information, respectful remembrance, or measured analysis.',
-            },
-          },
-        },
+        questions,
       }),
       signal: AbortSignal.timeout(15_000),
     });
@@ -89,6 +107,7 @@ export class JevClient {
       ragebait: parsed.answers.ragebait.noul,
       inflammatory: parsed.answers.inflammatory.noul,
       sensationalized: parsed.answers.sensationalized.noul,
+      custom: parsed.answers.custom?.noul ?? null,
     });
   }
 }

@@ -1,5 +1,5 @@
 import type { DebugPresenter, PlatformAdapter } from '../application/ports';
-import type { Category, ClassificationScores } from '../domain/classification';
+import type { ClassificationScores, MatchCategory } from '../domain/classification';
 
 const percentage = (score: number): string => `${Math.round(score * 100)}%`;
 
@@ -16,7 +16,8 @@ export class DebugChipController implements DebugPresenter {
     element: HTMLElement,
     scores: ClassificationScores,
     threshold: number,
-    matchedCategories: readonly Category[],
+    matchedCategories: readonly MatchCategory[],
+    customRule: string | undefined,
   ): void {
     const anchor = this.#adapter.getDebugAnchor(element);
     if (anchor === undefined) {
@@ -25,17 +26,24 @@ export class DebugChipController implements DebugPresenter {
 
     const chip = this.#chipsByElement.get(element) ?? document.createElement('span');
     chip.className = 'l-ragebait-debug-chip';
-    chip.textContent = `R ${percentage(scores.ragebait)} · I ${percentage(scores.inflammatory)} · S ${percentage(scores.sensationalized)}`;
-    chip.title = [
+    const customLabel = scores.custom === null ? '' : ` · C ${percentage(scores.custom)}`;
+    chip.textContent = `R ${percentage(scores.ragebait)} · I ${percentage(scores.inflammatory)} · S ${percentage(scores.sensationalized)}${customLabel}`;
+    const tooltipLines = [
       'Jev category probabilities (not intensity ratings)',
       `Ragebait: ${percentage(scores.ragebait)}`,
       `Inflammatory discussion: ${percentage(scores.inflammatory)}`,
       `Sensationalized tragedy: ${percentage(scores.sensationalized)}`,
       `Active hide threshold: ${percentage(threshold)}`,
+    ];
+    if (scores.custom !== null && customRule !== undefined) {
+      tooltipLines.push(`Custom rule: ${percentage(scores.custom)}`, customRule);
+    }
+    tooltipLines.push(
       matchedCategories.length > 0
         ? `Would hide for: ${matchedCategories.join(', ')}`
         : 'Would remain visible at the current settings',
-    ].join('\n');
+    );
+    chip.title = tooltipLines.join('\n');
     chip.setAttribute('aria-label', chip.title);
     chip.style.display = 'inline-flex';
     chip.style.alignItems = 'center';

@@ -1,4 +1,4 @@
-import type { Category, ClassificationScores } from '../domain/classification';
+import type { ClassificationScores, MatchCategory } from '../domain/classification';
 import type { ContentCandidate, Platform } from '../domain/platform';
 
 export type PlatformAdapter = Readonly<{
@@ -11,7 +11,11 @@ export type PlatformAdapter = Readonly<{
 export type ContentHasher = (text: string) => Promise<string>;
 
 export type ClassificationProvider = Readonly<{
-  classify: (text: string, apiKey: string) => Promise<ClassificationScores>;
+  classify: (
+    text: string,
+    apiKey: string,
+    customRule: string | undefined,
+  ) => Promise<ClassificationScores>;
 }>;
 
 export type ScoreCache = Readonly<{
@@ -23,7 +27,7 @@ export type ContentRemover = Readonly<{
   hide: (
     element: HTMLElement,
     text: string,
-    categories: readonly Category[],
+    categories: readonly MatchCategory[],
     animationsEnabled: boolean,
   ) => Promise<string>;
 }>;
@@ -33,7 +37,8 @@ export type DebugPresenter = Readonly<{
     element: HTMLElement,
     scores: ClassificationScores,
     threshold: number,
-    matchedCategories: readonly Category[],
+    matchedCategories: readonly MatchCategory[],
+    customRule: string | undefined,
   ) => void;
   clear: () => void;
 }>;

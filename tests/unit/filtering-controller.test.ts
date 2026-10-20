@@ -72,7 +72,7 @@ describe('FilteringController', () => {
       await Promise.resolve();
       return {
         ok: true,
-        scores: { ragebait: 0.99, inflammatory: 0.1, sensationalized: 0.1 },
+        scores: { ragebait: 0.99, inflammatory: 0.1, sensationalized: 0.1, custom: null },
         matchedCategories: ['ragebait'],
         shouldHide: true,
       };
@@ -113,7 +113,7 @@ describe('FilteringController', () => {
       return classificationSucceeds
         ? {
             ok: true,
-            scores: { ragebait: 0.9, inflammatory: 0.1, sensationalized: 0.1 },
+            scores: { ragebait: 0.9, inflammatory: 0.1, sensationalized: 0.1, custom: null },
             matchedCategories: ['ragebait'],
             shouldHide: true,
           }

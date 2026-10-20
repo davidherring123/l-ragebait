@@ -26,7 +26,7 @@ describe('storage boundaries', () => {
   it('caches scores without raw content and expires stale decisions', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-01-01T00:00:00Z'));
-    const scores = { ragebait: 0.9, inflammatory: 0.2, sensationalized: 0.1 };
+    const scores = { ragebait: 0.9, inflammatory: 0.2, sensationalized: 0.1, custom: null };
     await cacheScores('policy:hash', scores);
     await expect(getCachedScores('policy:hash')).resolves.toEqual(scores);
 
