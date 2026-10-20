@@ -103,6 +103,9 @@ export class FilteringController {
         && !this.#observed.has(element)
         && !processedForCurrentSettings
       ) {
+        if (this.#settings.debugMode) {
+          this.#debugPresenter.showStatus(element, 'pending');
+        }
         this.#discoveredCount += 1;
         this.#observed.add(element);
         this.#intersectionObserver.observe(element);
@@ -117,6 +120,9 @@ export class FilteringController {
     }
     const candidate = this.#adapter.extract(element);
     if (candidate === undefined) {
+      if (this.#settings.debugMode) {
+        this.#debugPresenter.showStatus(element, 'no-text');
+      }
       return;
     }
     this.#processedGeneration.set(element, generation);
@@ -134,13 +140,16 @@ export class FilteringController {
       platform: candidate.platform,
     });
     const result = ClassificationResponseSchema.safeParse(response);
-    if (
-      generation !== this.#settingsGeneration
-      || !result.success
-      || !result.data.ok
-      || !candidate.element.isConnected
-      || candidate.element.style.display === 'none'
-    ) {
+    if (generation !== this.#settingsGeneration || !candidate.element.isConnected) {
+      return;
+    }
+    if (!result.success || !result.data.ok) {
+      if (this.#settings.debugMode) {
+        this.#debugPresenter.showStatus(candidate.element, 'error');
+      }
+      return;
+    }
+    if (candidate.element.style.display === 'none') {
       return;
     }
 
@@ -163,7 +172,6 @@ export class FilteringController {
           ? this.#settings.customRule.instruction.trim() || undefined
           : undefined,
       );
-      return;
     }
 
     if (!result.data.shouldHide) {

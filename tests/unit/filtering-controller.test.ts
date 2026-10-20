@@ -85,7 +85,7 @@ describe('FilteringController', () => {
     const controller = new FilteringController(
       adapter,
       { hide },
-      { show: vi.fn(), clear: vi.fn() },
+      { showStatus: vi.fn(), show: vi.fn(), clear: vi.fn() },
       async () => {
         await Promise.resolve();
         return 'a'.repeat(64);
@@ -127,7 +127,7 @@ describe('FilteringController', () => {
     const controller = new FilteringController(
       adapter,
       { hide },
-      { show: vi.fn(), clear: vi.fn() },
+      { showStatus: vi.fn(), show: vi.fn(), clear: vi.fn() },
       async () => {
         await Promise.resolve();
         return 'a'.repeat(64);

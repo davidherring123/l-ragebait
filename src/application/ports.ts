@@ -33,6 +33,10 @@ export type ContentRemover = Readonly<{
 }>;
 
 export type DebugPresenter = Readonly<{
+  showStatus: (
+    element: HTMLElement,
+    status: 'pending' | 'error' | 'no-text',
+  ) => void;
   show: (
     element: HTMLElement,
     scores: ClassificationScores,
