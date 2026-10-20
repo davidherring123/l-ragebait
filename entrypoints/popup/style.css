@@ -1,44 +1,56 @@
 :root {
-  color: #20221f;
-  background: #f7f6f1;
+  color: #e9f7ff;
+  background: #06182e;
   font: 13px/1.4 system-ui, sans-serif;
+  color-scheme: dark;
+  --background: #06182e;
+  --surface: #0a2442;
+  --surface-raised: #0d3158;
+  --border: #245c83;
+  --accent: #69d6ff;
+  --accent-strong: #249be1;
+  --muted: #9dbbd0;
+  --danger: #ff9a9a;
 }
 
 * { box-sizing: border-box; }
-body { width: 360px; margin: 0; }
-header { display: flex; align-items: center; justify-content: space-between; padding: 16px; color: #fff; background: #20221f; }
+body { width: 360px; margin: 0; background: var(--background); }
+header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; color: #fff; border-bottom: 1px solid #3179a7; background: linear-gradient(145deg, #0c3764, #071a31 72%); }
+.brand { display: flex; gap: 10px; align-items: center; }
+.brand img { flex: none; border-radius: 10px; }
 h1 { margin: 0; font-size: 19px; }
-header p { margin: 2px 0 0; color: #c9ccc3; font-size: 11px; }
+header p { margin: 2px 0 0; color: #b9daf0; font-size: 11px; }
 main { padding: 0 16px 12px; }
-section { padding: 13px 0; border-bottom: 1px solid #deddd7; }
+section { padding: 13px 0; border-bottom: 1px solid #173f5f; }
 h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
 label { display: flex; gap: 8px; align-items: center; margin: 7px 0; }
-input[type='checkbox'] { accent-color: #657850; }
-input[type='range'] { width: 100%; accent-color: #657850; }
-.range-labels { display: flex; justify-content: space-between; color: #696b66; font-size: 10px; }
+input[type='checkbox'] { accent-color: var(--accent-strong); }
+input[type='range'] { width: 100%; accent-color: var(--accent); }
+.range-labels { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; }
 .row { display: flex; align-items: center; justify-content: space-between; }
 .row h2 { margin: 0; }
 .switch { margin: 0; font-weight: 700; }
 .stats { display: grid; grid-template-columns: 1fr 1fr; text-align: center; }
-.stats div + div { border-left: 1px solid #deddd7; }
-.stats strong { display: block; font-size: 24px; color: #536441; }
-.stats span { color: #696b66; font-size: 11px; }
+.stats div + div { border-left: 1px solid #245578; }
+.stats strong { display: block; font-size: 24px; color: var(--accent); }
+.stats span { color: var(--muted); font-size: 11px; }
 .key-row { display: flex; gap: 6px; }
 .key-row input { min-width: 0; flex: 1; }
-input[type='password'], input[type='search'], textarea, button { border: 1px solid #bfc1b9; border-radius: 5px; padding: 7px 9px; background: #fff; }
+input[type='password'], input[type='search'], textarea, button { color: #eaf8ff; border: 1px solid var(--border); border-radius: 5px; padding: 7px 9px; background: var(--surface-raised); }
+input::placeholder, textarea::placeholder { color: #7fa2bb; }
 textarea { width: 100%; resize: vertical; font: inherit; }
-.field-label { margin-bottom: 4px; color: #51534e; font-size: 11px; }
+.field-label { margin-bottom: 4px; color: #c7e2f3; font-size: 11px; }
 button { cursor: pointer; font-weight: 600; }
-button:hover { border-color: #657850; }
-.text-button { padding: 0; border: 0; color: #536441; background: transparent; }
-.status, .muted, small { color: #696b66; }
+button:hover { border-color: var(--accent); background: #124370; }
+.text-button { padding: 0; border: 0; color: var(--accent); background: transparent; }
+.status, .muted, small { color: var(--muted); }
 .status { margin: 0 0 7px; }
 small { display: block; margin-top: 5px; }
 ul { margin: 8px 0 0; padding: 0; list-style: none; }
-li { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 0; border-top: 1px solid #e5e4df; }
+li { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 0; border-top: 1px solid #173f5f; }
 li p { min-width: 0; margin: 0; overflow-wrap: anywhere; }
 .recently-hidden input[type='search'] { width: 100%; margin-top: 10px; }
 #hidden-items { max-height: 180px; overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable; }
 #hidden-items:empty { display: none; }
 #hidden-empty { margin: 9px 0 0; }
-#error { min-height: 18px; margin: 0; padding: 0 16px 10px; color: #9d2b20; }
+#error { min-height: 18px; margin: 0; padding: 0 16px 10px; color: var(--danger); }
