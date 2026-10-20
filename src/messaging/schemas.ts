@@ -35,6 +35,7 @@ export const ExtensionStateSchema = z.object({
 export const ContentRequestSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('settingsChanged'), settings: SettingsSchema }),
   z.object({ type: z.literal('getHiddenItems') }),
+  z.object({ type: z.literal('getDiagnostics') }),
   z.object({ type: z.literal('restoreHiddenItem'), id: z.string().min(1) }),
 ]);
 

@@ -16,7 +16,7 @@ export async function startContentScript(adapter: PlatformAdapter): Promise<void
   const animation = new AnimationController(registry);
   const controller = new FilteringController(adapter, animation, hashContent, settings);
 
-  browser.runtime.onMessage.addListener((message: unknown) => {
+  browser.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
     const parsed = ContentRequestSchema.safeParse(message);
     if (!parsed.success) {
       return undefined;
@@ -24,11 +24,17 @@ export async function startContentScript(adapter: PlatformAdapter): Promise<void
     switch (parsed.data.type) {
       case 'settingsChanged':
         controller.updateSettings(parsed.data.settings);
-        return { ok: true };
+        sendResponse({ ok: true });
+        return false;
       case 'getHiddenItems':
-        return registry.list();
+        sendResponse(registry.list());
+        return false;
+      case 'getDiagnostics':
+        sendResponse(controller.getDiagnostics());
+        return false;
       case 'restoreHiddenItem':
-        return { ok: registry.restore(parsed.data.id) };
+        sendResponse({ ok: registry.restore(parsed.data.id) });
+        return false;
     }
   });
 

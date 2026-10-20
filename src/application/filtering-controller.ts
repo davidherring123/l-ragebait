@@ -15,6 +15,9 @@ export class FilteringController {
   #mutationObserver: MutationObserver | undefined;
   #settings: Settings;
   #settingsGeneration = 0;
+  #discoveredCount = 0;
+  #queuedCount = 0;
+  #requestCount = 0;
 
   public constructor(
     adapter: PlatformAdapter,
@@ -68,6 +71,20 @@ export class FilteringController {
     this.#intersectionObserver.disconnect();
   }
 
+  public getDiagnostics(): Readonly<{
+    discoveredCount: number;
+    queuedCount: number;
+    requestCount: number;
+    enabled: boolean;
+  }> {
+    return {
+      discoveredCount: this.#discoveredCount,
+      queuedCount: this.#queuedCount,
+      requestCount: this.#requestCount,
+      enabled: this.#isEnabled(),
+    };
+  }
+
   #discover(root: ParentNode): void {
     if (!this.#isEnabled()) {
       return;
@@ -80,6 +97,7 @@ export class FilteringController {
         && !this.#observed.has(element)
         && !processedForCurrentSettings
       ) {
+        this.#discoveredCount += 1;
         this.#observed.add(element);
         this.#intersectionObserver.observe(element);
       }
@@ -96,11 +114,13 @@ export class FilteringController {
       return;
     }
     this.#processedGeneration.set(element, generation);
+    this.#queuedCount += 1;
     this.#queue.enqueue(async () => this.#process(candidate, generation));
   }
 
   async #process(candidate: ContentCandidate, generation: number): Promise<void> {
     const hash = await this.#hash(candidate.text);
+    this.#requestCount += 1;
     const response: unknown = await browser.runtime.sendMessage({
       type: 'classify',
       hash,

@@ -25,8 +25,16 @@ export const CLASSIFIER_POLICY_VERSION = 'jev-1.13.0-policy-1';
 export class JevClient {
   readonly #fetch: typeof fetch;
 
-  public constructor(fetchImplementation: typeof fetch = fetch) {
-    this.#fetch = fetchImplementation;
+  public constructor(fetchImplementation?: typeof fetch) {
+    this.#fetch = fetchImplementation === undefined
+      ? async (input, init): Promise<Response> => {
+          const response = await globalThis.fetch(input, init);
+          return response;
+        }
+      : async (input, init): Promise<Response> => {
+          const response = await fetchImplementation(input, init);
+          return response;
+        };
   }
 
   public async classify(text: string, apiKey: string): Promise<ClassificationScores> {
