@@ -16,6 +16,7 @@ describe('platform adapters', () => {
 
     expect(first).toBeDefined();
     expect(first === undefined ? undefined : xAdapter.extract(first)?.text).toContain('Quoted context');
+    expect(first === undefined ? undefined : xAdapter.getDebugAnchor(first)?.dataset.testid).toBe('User-Name');
   });
 
   it('extracts a YouTube recommendation', () => {

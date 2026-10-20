@@ -24,8 +24,7 @@ export const xAdapter: PlatformAdapter = {
   platform: 'x',
   discover: (root) => matchingElements(root, POST_SELECTOR),
   extract: extractXPost,
-  getDebugAnchor: (element) => {
-    const author = element.querySelector<HTMLElement>('[data-testid="User-Name"]');
-    return author?.parentElement ?? author ?? undefined;
-  },
+  getDebugAnchor: (element) => (
+    element.querySelector<HTMLElement>('[data-testid="User-Name"]') ?? undefined
+  ),
 };
