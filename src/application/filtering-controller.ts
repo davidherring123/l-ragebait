@@ -10,10 +10,11 @@ export class FilteringController {
   readonly #hash: ContentHasher;
   readonly #queue: ClassificationQueue;
   readonly #observed = new WeakSet<HTMLElement>();
-  readonly #processed = new WeakSet<HTMLElement>();
+  readonly #processedGeneration = new WeakMap<HTMLElement, number>();
   readonly #intersectionObserver: IntersectionObserver;
   #mutationObserver: MutationObserver | undefined;
   #settings: Settings;
+  #settingsGeneration = 0;
 
   public constructor(
     adapter: PlatformAdapter,
@@ -33,6 +34,7 @@ export class FilteringController {
         for (const entry of entries) {
           if (entry.isIntersecting && entry.target instanceof HTMLElement) {
             this.#intersectionObserver.unobserve(entry.target);
+            this.#observed.delete(entry.target);
             this.#queueCandidate(entry.target);
           }
         }
@@ -57,6 +59,7 @@ export class FilteringController {
 
   public updateSettings(settings: Settings): void {
     this.#settings = settings;
+    this.#settingsGeneration += 1;
     this.#discover(document);
   }
 
@@ -70,7 +73,13 @@ export class FilteringController {
       return;
     }
     for (const element of this.#adapter.discover(root)) {
-      if (!this.#observed.has(element) && !this.#processed.has(element)) {
+      const processedForCurrentSettings =
+        this.#processedGeneration.get(element) === this.#settingsGeneration;
+      if (
+        element.style.display !== 'none'
+        && !this.#observed.has(element)
+        && !processedForCurrentSettings
+      ) {
         this.#observed.add(element);
         this.#intersectionObserver.observe(element);
       }
@@ -78,18 +87,19 @@ export class FilteringController {
   }
 
   #queueCandidate(element: HTMLElement): void {
-    if (this.#processed.has(element) || !this.#isEnabled()) {
+    const generation = this.#settingsGeneration;
+    if (this.#processedGeneration.get(element) === generation || !this.#isEnabled()) {
       return;
     }
     const candidate = this.#adapter.extract(element);
     if (candidate === undefined) {
       return;
     }
-    this.#processed.add(element);
-    this.#queue.enqueue(async () => this.#process(candidate));
+    this.#processedGeneration.set(element, generation);
+    this.#queue.enqueue(async () => this.#process(candidate, generation));
   }
 
-  async #process(candidate: ContentCandidate): Promise<void> {
+  async #process(candidate: ContentCandidate, generation: number): Promise<void> {
     const hash = await this.#hash(candidate.text);
     const response: unknown = await browser.runtime.sendMessage({
       type: 'classify',
@@ -98,13 +108,22 @@ export class FilteringController {
       platform: candidate.platform,
     });
     const result = ClassificationResponseSchema.safeParse(response);
-    if (!result.success || !result.data.ok || !result.data.shouldHide || !candidate.element.isConnected) {
+    if (
+      generation !== this.#settingsGeneration
+      || !result.success
+      || !result.data.ok
+      || !result.data.shouldHide
+      || !candidate.element.isConnected
+      || candidate.element.style.display === 'none'
+    ) {
       return;
     }
 
     const currentCandidate = this.#adapter.extract(candidate.element);
     if (currentCandidate === undefined || (await this.#hash(currentCandidate.text)) !== hash) {
-      this.#processed.delete(candidate.element);
+      if (this.#processedGeneration.get(candidate.element) === generation) {
+        this.#processedGeneration.delete(candidate.element);
+      }
       this.#discover(candidate.element);
       return;
     }

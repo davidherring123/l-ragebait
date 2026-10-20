@@ -103,11 +103,19 @@ describe('FilteringController', () => {
     controller.stop();
   });
 
-  it('fails open when classification fails', async () => {
+  it('fails open and re-evaluates existing content after settings change', async () => {
     vi.stubGlobal('IntersectionObserver', ImmediateIntersectionObserver);
+    let classificationSucceeds = false;
     const sendMessage = vi.fn(async (): Promise<unknown> => {
       await Promise.resolve();
-      return { ok: false };
+      return classificationSucceeds
+        ? {
+            ok: true,
+            scores: { ragebait: 0.9, inflammatory: 0.1, sensationalized: 0.1 },
+            matchedCategories: ['ragebait'],
+            shouldHide: true,
+          }
+        : { ok: false };
     });
     vi.stubGlobal('browser', { runtime: { sendMessage } });
     const hide = vi.fn(async (): Promise<string> => {
@@ -134,6 +142,12 @@ describe('FilteringController', () => {
     expect(hide).not.toHaveBeenCalled();
     expect(sendMessage).toHaveBeenCalledOnce();
     expect(candidate.isConnected).toBe(true);
+
+    classificationSucceeds = true;
+    controller.updateSettings({ ...defaultSettings, threshold: 0.7 });
+    await settle();
+
+    expect(hide).toHaveBeenCalledOnce();
     controller.stop();
   });
 });

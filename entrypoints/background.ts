@@ -81,6 +81,7 @@ async function handleRequest(request: BackgroundRequest): Promise<unknown> {
       } else {
         await saveApiKey(request.apiKey);
       }
+      await broadcastSettings(await getSettings());
       return { ok: true };
     case 'recordHidden':
       return { ok: true, statistics: await incrementStatistics() };

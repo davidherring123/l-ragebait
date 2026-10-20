@@ -40,6 +40,7 @@ function reportError(error: unknown): void {
 }
 
 function readSettings(): Settings {
+  const sensitivity = Number(controls.threshold.value) / 100;
   return {
     enabled: controls.enabled.checked,
     platforms: { x: controls.platformX.checked, youtube: controls.platformYouTube.checked },
@@ -48,7 +49,7 @@ function readSettings(): Settings {
       inflammatory: controls.inflammatory.checked,
       sensationalized: controls.sensationalized.checked,
     },
-    threshold: Number(controls.threshold.value) / 100,
+    threshold: 0.95 - sensitivity * 0.25,
     animations: controls.animations.checked,
   };
 }
@@ -60,7 +61,7 @@ function displaySettings(settings: Settings): void {
   controls.ragebait.checked = settings.categories.ragebait;
   controls.inflammatory.checked = settings.categories.inflammatory;
   controls.sensationalized.checked = settings.categories.sensationalized;
-  controls.threshold.value = String(Math.round(settings.threshold * 100));
+  controls.threshold.value = String(Math.round(((0.95 - settings.threshold) / 0.25) * 100));
   controls.animations.checked = settings.animations;
   textElement('threshold-output').textContent = `${controls.threshold.value}%`;
 }
