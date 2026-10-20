@@ -20,8 +20,6 @@ test('classifies a YouTube recommendation and shows debug scores', async ({ cont
         model: 'jev-1.13.0',
         answers: {
           ragebait: { type: 'noul', noul: 0.29 },
-          inflammatory: { type: 'noul', noul: 0.2 },
-          sensationalized: { type: 'noul', noul: 0.1 },
           custom: { type: 'noul', noul: 0.36 },
         },
       }),
@@ -79,7 +77,7 @@ test('classifies a YouTube recommendation and shows debug scores', async ({ cont
   expect(jevRequestCount).toBe(1);
   await expect(recommendation).toHaveCSS('display', 'block');
   const chip = recommendation.locator('.l-ragebait-debug-chip');
-  await expect(chip).toHaveText('R 29% · I 20% · S 10% · C 36%');
+  await expect(chip).toHaveText('R 29% · C 36%');
   await expect(chip).toHaveAttribute('title', /Active hide threshold: 85%/u);
   await expect(chip).toHaveAttribute('title', /This content tries to provoke arguments about gaming\./u);
 });

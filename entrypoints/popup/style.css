@@ -25,7 +25,7 @@ input[type='range'] { width: 100%; accent-color: #657850; }
 .stats span { color: #696b66; font-size: 11px; }
 .key-row { display: flex; gap: 6px; }
 .key-row input { min-width: 0; flex: 1; }
-input[type='password'], textarea, button { border: 1px solid #bfc1b9; border-radius: 5px; padding: 7px 9px; background: #fff; }
+input[type='password'], input[type='search'], textarea, button { border: 1px solid #bfc1b9; border-radius: 5px; padding: 7px 9px; background: #fff; }
 textarea { width: 100%; resize: vertical; font: inherit; }
 .field-label { margin-bottom: 4px; color: #51534e; font-size: 11px; }
 button { cursor: pointer; font-weight: 600; }
@@ -36,5 +36,9 @@ button:hover { border-color: #657850; }
 small { display: block; margin-top: 5px; }
 ul { margin: 8px 0 0; padding: 0; list-style: none; }
 li { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 0; border-top: 1px solid #e5e4df; }
-li p { margin: 0; overflow-wrap: anywhere; }
+li p { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.recently-hidden input[type='search'] { width: 100%; margin-top: 10px; }
+#hidden-items { max-height: 180px; overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable; }
+#hidden-items:empty { display: none; }
+#hidden-empty { margin: 9px 0 0; }
 #error { min-height: 18px; margin: 0; padding: 0 16px 10px; color: #9d2b20; }

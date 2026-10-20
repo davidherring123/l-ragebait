@@ -45,12 +45,10 @@ export class DebugChipController implements DebugPresenter {
     }
     chip.className = 'l-ragebait-debug-chip';
     const customLabel = scores.custom === null ? '' : ` · C ${percentage(scores.custom)}`;
-    chip.textContent = `R ${percentage(scores.ragebait)} · I ${percentage(scores.inflammatory)} · S ${percentage(scores.sensationalized)}${customLabel}`;
+    chip.textContent = `R ${percentage(scores.ragebait)}${customLabel}`;
     const tooltipLines = [
       'Jev category probabilities (not intensity ratings)',
       `Ragebait: ${percentage(scores.ragebait)}`,
-      `Inflammatory discussion: ${percentage(scores.inflammatory)}`,
-      `Sensationalized tragedy: ${percentage(scores.sensationalized)}`,
       `Active hide threshold: ${percentage(threshold)}`,
     ];
     if (scores.custom !== null && customRule !== undefined) {

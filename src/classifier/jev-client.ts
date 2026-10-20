@@ -14,14 +14,12 @@ const jevResponseSchema = z.object({
   model: z.string().min(1),
   answers: z.object({
     ragebait: jevNoulSchema,
-    inflammatory: jevNoulSchema,
-    sensationalized: jevNoulSchema,
     custom: jevNoulSchema.optional(),
   }),
 });
 
 const MODEL = 'jev-1.13.0';
-export const CLASSIFIER_POLICY_VERSION = 'jev-1.13.0-policy-2';
+export const CLASSIFIER_POLICY_VERSION = 'jev-1.13.0-policy-3';
 
 export class JevClient {
   readonly #fetch: typeof fetch;
@@ -47,28 +45,10 @@ export class JevClient {
       ragebait: {
         type: 'noul',
         instructions:
-          'Is this content deliberately manufactured to provoke anger or outrage primarily to farm engagement?',
+          'Is this ragebait or inflammatory content designed around provocation, hostility, outrage, feuding, or antagonistic social conflict to attract engagement?',
         criteria: {
-          true: 'Uses deliberate provocation, manipulative framing, or outrage farming as its primary presentation.',
-          false: 'Neutral reporting, sincere humor, legitimate criticism, or ordinary disagreement even when the topic is negative.',
-        },
-      },
-      inflammatory: {
-        type: 'noul',
-        instructions:
-          'Is this a hostile, antagonistic discussion such as a political fight, gender war, or attack-driven social commentary?',
-        criteria: {
-          true: 'The presentation promotes hostility, contempt, dehumanization, or combative group conflict.',
-          false: 'Civil disagreement, factual analysis, neutral news, or criticism focused on conduct and evidence.',
-        },
-      },
-      sensationalized: {
-        type: 'noul',
-        instructions:
-          'Does this exploit a crime, tragedy, death, or disturbing event through sensationalized commentary?',
-        criteria: {
-          true: 'The presentation exploits disturbing events for shock, spectacle, outrage, or engagement.',
-          false: 'Straightforward reporting, safety information, respectful remembrance, or measured analysis.',
+          true: 'The primary presentation uses manipulative provocation, outrage farming, hostility, contempt, personal attacks, feuding, or combative group conflict.',
+          false: 'Neutral reporting, sincere humor, factual analysis, civil disagreement, or evidence-based criticism even when the topic is negative.',
         },
       },
     } as const;
@@ -105,8 +85,6 @@ export class JevClient {
     const parsed = jevResponseSchema.parse(await response.json());
     return ClassificationScoresSchema.parse({
       ragebait: parsed.answers.ragebait.noul,
-      inflammatory: parsed.answers.inflammatory.noul,
-      sensationalized: parsed.answers.sensationalized.noul,
       custom: parsed.answers.custom?.noul ?? null,
     });
   }

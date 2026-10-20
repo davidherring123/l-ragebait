@@ -1,6 +1,6 @@
 # L Ragebait
 
-L Ragebait is a Manifest V3 Chrome extension that conservatively hides high-confidence ragebait, hostile discussions, and sensationalized tragedy commentary on X and YouTube.
+L Ragebait is a Manifest V3 Chrome extension that conservatively hides high-confidence ragebait and inflammatory discussions on X and YouTube.
 
 It analyzes visible text only. It does not inspect media, fetch transcripts, or permanently modify platform data. Classification failures always leave content visible.
 

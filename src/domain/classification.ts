@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const categories = ['ragebait', 'inflammatory', 'sensationalized'] as const;
+export const categories = ['ragebait'] as const;
 
 export const CategorySchema = z.enum(categories);
 export type Category = z.infer<typeof CategorySchema>;
@@ -9,8 +9,6 @@ export type MatchCategory = z.infer<typeof MatchCategorySchema>;
 
 export const ClassificationScoresSchema = z.object({
   ragebait: z.number().min(0).max(1),
-  inflammatory: z.number().min(0).max(1),
-  sensationalized: z.number().min(0).max(1),
   custom: z.number().min(0).max(1).nullable(),
 });
 

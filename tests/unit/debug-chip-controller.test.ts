@@ -25,14 +25,14 @@ describe('DebugChipController', () => {
 
     controller.show(
       element,
-      { ragebait: 0.94, inflammatory: 0.74, sensationalized: 0.57, custom: null },
+      { ragebait: 0.94, custom: null },
       0.85,
       ['ragebait'],
       undefined,
     );
 
     const chip = element.querySelector<HTMLElement>('.l-ragebait-debug-chip');
-    expect(chip?.textContent).toBe('R 94% · I 74% · S 57%');
+    expect(chip?.textContent).toBe('R 94%');
     expect(chip?.title).toContain('Active hide threshold: 85%');
     expect(chip?.title).toContain('Would hide for: ragebait');
   });
@@ -44,7 +44,7 @@ describe('DebugChipController', () => {
     const controller = new DebugChipController(adapter);
     controller.show(
       element,
-      { ragebait: 0.1, inflammatory: 0.2, sensationalized: 0.3, custom: null },
+      { ragebait: 0.1, custom: null },
       0.85,
       [],
       undefined,

@@ -23,10 +23,21 @@ describe('storage boundaries', () => {
     await expect(getSettings()).resolves.toEqual(settings);
   });
 
+  it('migrates obsolete category fields out of persisted settings', async () => {
+    await browser.storage.local.set({
+      settings: {
+        ...defaultSettings,
+        categories: { ragebait: false, inflammatory: true, sensationalized: true },
+      },
+    });
+
+    await expect(getSettings()).resolves.toMatchObject({ categories: { ragebait: false } });
+  });
+
   it('caches scores without raw content and expires stale decisions', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-01-01T00:00:00Z'));
-    const scores = { ragebait: 0.9, inflammatory: 0.2, sensationalized: 0.1, custom: null };
+    const scores = { ragebait: 0.9, custom: null };
     await cacheScores('policy:hash', scores);
     await expect(getCachedScores('policy:hash')).resolves.toEqual(scores);
 

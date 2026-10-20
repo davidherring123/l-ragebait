@@ -23,23 +23,19 @@
       </section>
 
       <section>
-        <h2>Categories</h2>
-        <label><input id="category-ragebait" type="checkbox" /> Ragebait</label>
-        <label><input id="category-inflammatory" type="checkbox" /> Inflammatory discussions</label>
-        <label><input id="category-sensationalized" type="checkbox" /> Sensationalized tragedies</label>
-      </section>
-
-      <section>
-        <h2>Custom filtering</h2>
+        <h2>Filter Categories</h2>
+        <label><input id="category-ragebait" type="checkbox" /> Ragebait &amp; inflammatory discussions</label>
         <label><input id="custom-rule-enabled" type="checkbox" /> Enable custom rule</label>
-        <label class="field-label" for="custom-rule">Hide content when…</label>
-        <textarea
-          id="custom-rule"
-          maxlength="500"
-          rows="3"
-          placeholder="Example: This content tries to start hostile arguments between gaming communities."
-        ></textarea>
-        <small>Write one clear yes/no proposition. It uses the same sensitivity threshold.</small>
+        <div id="custom-rule-fields" hidden>
+          <label class="field-label" for="custom-rule">Hide content when…</label>
+          <textarea
+            id="custom-rule"
+            maxlength="500"
+            rows="3"
+            placeholder="Example: This content tries to start hostile arguments between gaming communities."
+          ></textarea>
+          <small>Write one clear yes/no proposition. It uses the same sensitivity threshold.</small>
+        </div>
       </section>
 
       <section>
@@ -67,13 +63,14 @@
       <section>
         <h2>Debug</h2>
         <label><input id="debug-mode" type="checkbox" /> Show classification scores</label>
-        <small>Adds status and R, I, S, and C probability chips while filtering remains active. Hover for details.</small>
+        <small>Adds status plus Ragebait (R) and custom (C) probability chips while filtering remains active. Hover for details.</small>
       </section>
 
-      <section>
+      <section class="recently-hidden">
         <div class="row"><h2>Recently hidden</h2><button id="refresh-hidden" class="text-button" type="button">Refresh</button></div>
+        <input id="hidden-search" type="search" placeholder="Search hidden items" aria-label="Search recently hidden items" />
         <p id="hidden-empty" class="muted">Nothing hidden in this tab.</p>
-        <ul id="hidden-items"></ul>
+        <ul id="hidden-items" aria-label="Recently hidden items"></ul>
       </section>
     </main>
     <p id="error" role="alert"></p>

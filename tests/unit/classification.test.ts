@@ -2,25 +2,25 @@ import { describe, expect, it } from 'vitest';
 
 import { decideClassification } from '../../src/domain/classification';
 
-const allEnabled = { ragebait: true, inflammatory: true, sensationalized: true };
+const allEnabled = { ragebait: true };
 
 describe('decideClassification', () => {
   it('hides at the configured threshold and reports only matching categories', () => {
     const decision = decideClassification(
-      { ragebait: 0.85, inflammatory: 0.3, sensationalized: 0.91, custom: null },
+      { ragebait: 0.85, custom: null },
       allEnabled,
       0.85,
     );
 
     expect(decision).toEqual({
       shouldHide: true,
-      matchedCategories: ['ragebait', 'sensationalized'],
+      matchedCategories: ['ragebait'],
     });
   });
 
   it('keeps likely neutral reporting visible', () => {
     const decision = decideClassification(
-      { ragebait: 0.14, inflammatory: 0.09, sensationalized: 0.28, custom: null },
+      { ragebait: 0.14, custom: null },
       allEnabled,
       0.85,
     );
@@ -30,7 +30,7 @@ describe('decideClassification', () => {
 
   it('does not match a disabled category', () => {
     const decision = decideClassification(
-      { ragebait: 0.99, inflammatory: 0.1, sensationalized: 0.1, custom: null },
+      { ragebait: 0.99, custom: null },
       { ...allEnabled, ragebait: false },
       0.85,
     );
@@ -40,7 +40,7 @@ describe('decideClassification', () => {
 
   it('matches an enabled custom rule independently', () => {
     const decision = decideClassification(
-      { ragebait: 0.1, inflammatory: 0.1, sensationalized: 0.1, custom: 0.9 },
+      { ragebait: 0.1, custom: 0.9 },
       allEnabled,
       0.85,
       true,

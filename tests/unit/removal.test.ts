@@ -31,7 +31,7 @@ describe('content removal', () => {
     const animate = vi.fn(() => ({ finished: Promise.resolve() }));
     const controller = new AnimationController(new HiddenItemRegistry(), animate);
 
-    await controller.hide(element, 'Inflammatory example content', ['inflammatory'], true);
+    await controller.hide(element, 'Inflammatory example content', ['ragebait'], true);
 
     expect(animate).toHaveBeenCalledOnce();
     expect(element.style.display).toBe('none');

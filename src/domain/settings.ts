@@ -8,8 +8,6 @@ export const SettingsSchema = z.object({
   }),
   categories: z.object({
     ragebait: z.boolean(),
-    inflammatory: z.boolean(),
-    sensationalized: z.boolean(),
   }),
   threshold: z.number().min(0.7).max(0.95),
   animations: z.boolean(),
@@ -30,8 +28,6 @@ export const defaultSettings: Settings = {
   },
   categories: {
     ragebait: true,
-    inflammatory: true,
-    sensationalized: true,
   },
   threshold: 0.85,
   animations: true,

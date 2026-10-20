@@ -5,8 +5,6 @@ import type { ClassificationScores } from '../../src/domain/classification';
 
 const scores: ClassificationScores = {
   ragebait: 0.9,
-  inflammatory: 0.2,
-  sensationalized: 0.1,
   custom: null,
 };
 

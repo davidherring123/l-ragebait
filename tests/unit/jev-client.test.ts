@@ -15,8 +15,6 @@ describe('JevClient', () => {
         model: 'jev-1.13.0',
         answers: {
           ragebait: { type: 'noul', noul: 0.91 },
-          inflammatory: { type: 'noul', noul: 0.31 },
-          sensationalized: { type: 'noul', noul: 0.12 },
           custom: { type: 'noul', noul: 0.88 },
         },
       }));
@@ -29,15 +27,11 @@ describe('JevClient', () => {
       'This content starts hostile arguments about games.',
     )).resolves.toEqual({
       ragebait: 0.91,
-      inflammatory: 0.31,
-      sensationalized: 0.12,
       custom: 0.88,
     });
     expect(requestBody).toMatchObject({
       questions: {
         ragebait: { type: 'noul' },
-        inflammatory: { type: 'noul' },
-        sensationalized: { type: 'noul' },
         custom: {
           type: 'noul',
           instructions: {
