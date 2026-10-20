@@ -31,4 +31,8 @@ export const youtubeAdapter: PlatformAdapter = {
   platform: 'youtube',
   discover: (root) => matchingElements(root, ITEM_SELECTOR),
   extract: extractYouTubeItem,
+  getDebugAnchor: (element) => {
+    const title = element.querySelector<HTMLElement>(TITLE_SELECTOR);
+    return title?.closest<HTMLElement>('h3') ?? title?.parentElement ?? title ?? undefined;
+  },
 };

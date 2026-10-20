@@ -1,6 +1,6 @@
 import { expect, test } from './fixtures';
 
-test('discovers a YouTube recommendation and sends it to Jev', async ({ context, page, extensionId }) => {
+test('classifies a YouTube recommendation and shows debug scores', async ({ context, page, extensionId }) => {
   let jevRequestCount = 0;
   let observedJevRequestCount = 0;
   const worker = context.serviceWorkers().at(0);
@@ -45,6 +45,9 @@ test('discovers a YouTube recommendation and sends it to Jev', async ({ context,
   await popup.getByPlaceholder('Paste a Jev API key').fill('test-key-not-real');
   await popup.getByRole('button', { name: 'Save' }).click();
   await expect(popup.getByText('API key saved')).toBeVisible();
+  await popup.getByLabel('Show classification scores').check();
+  await popup.reload();
+  await expect(popup.getByLabel('Show classification scores')).toBeChecked();
 
   await page.goto('https://www.youtube.com/');
   const recommendation = page.locator('ytd-rich-item-renderer');
@@ -69,5 +72,8 @@ test('discovers a YouTube recommendation and sends it to Jev', async ({ context,
   });
   await expect.poll(() => observedJevRequestCount, { timeout: 10_000 }).toBe(1);
   expect(jevRequestCount).toBe(1);
-  await expect(recommendation).toHaveCSS('display', 'none', { timeout: 10_000 });
+  await expect(recommendation).toHaveCSS('display', 'block');
+  const chip = recommendation.locator('.l-ragebait-debug-chip');
+  await expect(chip).toHaveText('R 99% · I 20% · S 10%');
+  await expect(chip).toHaveAttribute('title', /Active hide threshold: 85%/u);
 });

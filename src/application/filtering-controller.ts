@@ -2,11 +2,12 @@ import type { ContentCandidate } from '../domain/platform';
 import type { Settings } from '../domain/settings';
 import { ClassificationResponseSchema } from '../messaging/schemas';
 import { ClassificationQueue } from './classification-queue';
-import type { ContentHasher, ContentRemover, PlatformAdapter } from './ports';
+import type { ContentHasher, ContentRemover, DebugPresenter, PlatformAdapter } from './ports';
 
 export class FilteringController {
   readonly #adapter: PlatformAdapter;
   readonly #remover: ContentRemover;
+  readonly #debugPresenter: DebugPresenter;
   readonly #hash: ContentHasher;
   readonly #queue: ClassificationQueue;
   readonly #observed = new WeakSet<HTMLElement>();
@@ -22,11 +23,13 @@ export class FilteringController {
   public constructor(
     adapter: PlatformAdapter,
     remover: ContentRemover,
+    debugPresenter: DebugPresenter,
     hash: ContentHasher,
     settings: Settings,
   ) {
     this.#adapter = adapter;
     this.#remover = remover;
+    this.#debugPresenter = debugPresenter;
     this.#hash = hash;
     this.#settings = settings;
     this.#queue = new ClassificationQueue(2, (error) => {
@@ -63,6 +66,9 @@ export class FilteringController {
   public updateSettings(settings: Settings): void {
     this.#settings = settings;
     this.#settingsGeneration += 1;
+    if (!settings.debugMode) {
+      this.#debugPresenter.clear();
+    }
     this.#discover(document);
   }
 
@@ -132,7 +138,6 @@ export class FilteringController {
       generation !== this.#settingsGeneration
       || !result.success
       || !result.data.ok
-      || !result.data.shouldHide
       || !candidate.element.isConnected
       || candidate.element.style.display === 'none'
     ) {
@@ -145,6 +150,20 @@ export class FilteringController {
         this.#processedGeneration.delete(candidate.element);
       }
       this.#discover(candidate.element);
+      return;
+    }
+
+    if (this.#settings.debugMode) {
+      this.#debugPresenter.show(
+        candidate.element,
+        result.data.scores,
+        this.#settings.threshold,
+        result.data.matchedCategories,
+      );
+      return;
+    }
+
+    if (!result.data.shouldHide) {
       return;
     }
 

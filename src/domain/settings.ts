@@ -13,6 +13,7 @@ export const SettingsSchema = z.object({
   }),
   threshold: z.number().min(0.7).max(0.95),
   animations: z.boolean(),
+  debugMode: z.boolean().default(false),
 });
 
 export type Settings = z.infer<typeof SettingsSchema>;
@@ -30,4 +31,5 @@ export const defaultSettings: Settings = {
   },
   threshold: 0.85,
   animations: true,
+  debugMode: false,
 };

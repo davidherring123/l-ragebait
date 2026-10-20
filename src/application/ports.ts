@@ -5,6 +5,7 @@ export type PlatformAdapter = Readonly<{
   platform: Platform;
   discover: (root: ParentNode) => readonly HTMLElement[];
   extract: (element: HTMLElement) => ContentCandidate | undefined;
+  getDebugAnchor: (element: HTMLElement) => HTMLElement | undefined;
 }>;
 
 export type ContentHasher = (text: string) => Promise<string>;
@@ -25,4 +26,14 @@ export type ContentRemover = Readonly<{
     categories: readonly Category[],
     animationsEnabled: boolean,
   ) => Promise<string>;
+}>;
+
+export type DebugPresenter = Readonly<{
+  show: (
+    element: HTMLElement,
+    scores: ClassificationScores,
+    threshold: number,
+    matchedCategories: readonly Category[],
+  ) => void;
+  clear: () => void;
 }>;

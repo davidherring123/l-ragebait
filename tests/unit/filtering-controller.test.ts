@@ -51,6 +51,7 @@ const adapter: PlatformAdapter = {
     return matches;
   },
   extract: (element) => ({ element, platform: 'x', text: element.textContent }),
+  getDebugAnchor: (element) => element,
 };
 
 async function settle(): Promise<void> {
@@ -84,6 +85,7 @@ describe('FilteringController', () => {
     const controller = new FilteringController(
       adapter,
       { hide },
+      { show: vi.fn(), clear: vi.fn() },
       async () => {
         await Promise.resolve();
         return 'a'.repeat(64);
@@ -125,6 +127,7 @@ describe('FilteringController', () => {
     const controller = new FilteringController(
       adapter,
       { hide },
+      { show: vi.fn(), clear: vi.fn() },
       async () => {
         await Promise.resolve();
         return 'a'.repeat(64);

@@ -31,6 +31,7 @@ const controls = {
   sensationalized: input('category-sensationalized'),
   threshold: input('threshold'),
   animations: input('animations'),
+  debugMode: input('debug-mode'),
   apiKey: input('api-key'),
 };
 
@@ -51,6 +52,7 @@ function readSettings(): Settings {
     },
     threshold: 0.95 - sensitivity * 0.25,
     animations: controls.animations.checked,
+    debugMode: controls.debugMode.checked,
   };
 }
 
@@ -63,6 +65,7 @@ function displaySettings(settings: Settings): void {
   controls.sensationalized.checked = settings.categories.sensationalized;
   controls.threshold.value = String(Math.round(((0.95 - settings.threshold) / 0.25) * 100));
   controls.animations.checked = settings.animations;
+  controls.debugMode.checked = settings.debugMode;
   textElement('threshold-output').textContent = `${controls.threshold.value}%`;
 }
 
